@@ -1,14 +1,17 @@
-module github.com/RaymondCode/simple-demo
+module github.com/idMiFeng/tiktok
 
 go 1.17
 
 require (
+	github.com/RaymondCode/simple-demo v0.0.0-20230221080337-89b8c9434e04
 	github.com/gavv/httpexpect/v2 v2.8.0
 	github.com/gin-gonic/gin v1.7.7
+	github.com/jinzhu/gorm v1.9.16
 	github.com/stretchr/testify v1.7.0
 )
 
 require (
+	github.com/PaulXu-cn/go-mod-graph-chart v0.5.3 // indirect
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -17,11 +20,14 @@ require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.11.0 // indirect
+	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/kisielk/godepgraph v0.0.0-20221115040737-2d0831789458 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect

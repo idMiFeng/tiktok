@@ -3,8 +3,12 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/idMiFeng/tiktok/model"
+	"github.com/idMiFeng/tiktok/service"
 	"net/http"
 	"path/filepath"
+	"strconv"
+	"strings"
 )
 
 type VideoListResponse struct {
@@ -15,12 +19,6 @@ type VideoListResponse struct {
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
 	token := c.PostForm("token")
-
-	if _, exist := usersLoginInfo[token]; !exist {
-		c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
-		return
-	}
-
 	data, err := c.FormFile("data")
 	if err != nil {
 		c.JSON(http.StatusOK, Response{
@@ -31,7 +29,8 @@ func Publish(c *gin.Context) {
 	}
 
 	filename := filepath.Base(data.Filename)
-	user := usersLoginInfo[token]
+	username := strings.TrimSuffix(token, service.SALT)
+	user, _ := model.GetUserByName(username)
 	finalName := fmt.Sprintf("%d_%s", user.Id, filename)
 	saveFile := filepath.Join("./public/", finalName)
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
@@ -50,10 +49,12 @@ func Publish(c *gin.Context) {
 
 // PublishList all users have same publish video list
 func PublishList(c *gin.Context) {
-	c.JSON(http.StatusOK, VideoListResponse{
-		Response: Response{
-			StatusCode: 0,
-		},
-		VideoList: DemoVideos,
+	user_id := c.Query("user_id")
+	UserID, _ := strconv.ParseInt(user_id, 10, 64)
+	videos, _ := model.GetVideoByUserId(UserID)
+	c.JSON(http.StatusOK, gin.H{
+		"status_code": 0,
+		"status_msg":  "",
+		"video_list":  videos,
 	})
 }
