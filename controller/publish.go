@@ -21,7 +21,8 @@ type VideoListResponse struct {
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
 	token := c.PostForm("token")
-	data, err := c.FormFile("data")
+	data, err := c.FormFile("data") //用于获取 POST 请求中上传的文件数据。
+	title := c.PostForm("title")
 	if err != nil {
 		c.JSON(http.StatusOK, Response{
 			StatusCode: 1,
@@ -51,7 +52,7 @@ func Publish(c *gin.Context) {
 		FavoriteCount: 0,          // 默认点赞数为0
 		CommentCount:  0,          // 默认评论数为0
 		IsFavorite:    false,      // 默认未点赞
-		Title:         "",         // 你可以根据需要设置视频标题
+		Title:         title,      // 设置视频标题
 		UserID:        user.Id,    // 外键字段关联到 UserRegister 表的 Id
 		CreatedTime:   time.Now(), // 设置投稿时间为当前时间
 	}
