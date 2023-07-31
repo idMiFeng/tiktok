@@ -21,6 +21,7 @@ type VideoListResponse struct {
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
 	token := c.PostForm("token")
+	println(token)
 	data, err := c.FormFile("data") //用于获取 POST 请求中上传的文件数据。
 	title := c.PostForm("title")
 	if err != nil {
@@ -34,7 +35,7 @@ func Publish(c *gin.Context) {
 	filename := filepath.Base(data.Filename)
 	username := strings.TrimSuffix(token, service.SALT)
 	user, _ := model.GetUserInfoByName(username)
-	finalName := fmt.Sprintf("%d_%s", user.Id, filename)
+	finalName := fmt.Sprintf("%d_%s", user.UserID, filename)
 	saveFile := filepath.Join("./public/", finalName)
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
 		c.JSON(http.StatusOK, Response{
@@ -47,7 +48,7 @@ func Publish(c *gin.Context) {
 	// 创建Video对象并保存到数据库
 	video := model.Video{
 		Author:        user,
-		PlayUrl:       saveFile,   // 这里假设保存的是视频文件路径
+		PlayUrl:       saveFile,   // 这里保存的是视频文件路径
 		CoverUrl:      "",         // 视频封面的URL
 		FavoriteCount: 0,          // 默认点赞数为0
 		CommentCount:  0,          // 默认评论数为0

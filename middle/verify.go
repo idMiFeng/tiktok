@@ -11,23 +11,23 @@ import (
 
 func VerifyToken(c *gin.Context) {
 	token := c.PostForm("token")
-
+	println(token)
 	if len(token) == 0 {
 		//请求处理中止
 		c.Abort()
 		//返回json
-		c.JSON(http.StatusBadRequest,
+		c.JSON(http.StatusOK,
 			gin.H{
-				"status_code": -1,
+				"status_code": 1,
 				"status_msg":  "token为空",
 			})
 		return
 	}
 	flag, err := ParseToken(token)
 	if flag != true {
-		c.JSON(http.StatusBadRequest,
+		c.JSON(http.StatusOK,
 			gin.H{
-				"status_code": -1,
+				"status_code": 1,
 				"status_msg":  err,
 			})
 	} else {
