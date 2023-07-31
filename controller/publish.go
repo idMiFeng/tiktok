@@ -21,7 +21,6 @@ type VideoListResponse struct {
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
 	token := c.PostForm("token")
-	println(token)
 	data, err := c.FormFile("data") //用于获取 POST 请求中上传的文件数据。
 	title := c.PostForm("title")
 	if err != nil {

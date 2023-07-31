@@ -34,14 +34,13 @@ func RegisterService(username string, password string) (int64, error) {
 	// 查表，是否存在id
 	user, err := model.GetUserByName(username)
 	if err != nil {
-		return 0, errors.New("数据库查询错误")
-	}
-	if username == user.Username {
+		// 没有这条数据，可以插入
+		user, _ = model.InsertUser(username, password)
+		return user.Id, nil
+	} else {
 		return 0, errors.New("用户名已经存在")
 	}
-	// 插入
-	user, _ = model.InsertUser(username, password)
-	return user.Id, err
+
 }
 
 // LoginService 登录服务
