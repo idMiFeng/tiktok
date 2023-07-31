@@ -16,7 +16,7 @@ func main() {
 	defer dao.Close()
 
 	//建表
-	dao.DB.AutoMigrate(&model.UserRegister{})
+	dao.DB.AutoMigrate(&model.UserRegister{}, &model.User{}, &model.Video{})
 
 	go service.RunMessageServer()
 
