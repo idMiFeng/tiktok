@@ -63,10 +63,10 @@ func GetUserInfoByName(username string) (User, error) {
 	return userinfo, nil
 }
 
-// GetUserById 根据Id查询用户
-func GetUserById(Id int64) (UserRegister, error) {
-	user := UserRegister{}
-	if err := dao.DB.Where("Id = ?", Id).Limit(1).First(&user).Error; err != nil {
+// GetUserById 根据Id查询查找User表
+func GetUserById(Id int64) (User, error) {
+	user := User{}
+	if err := dao.DB.Where("user_id = ?", Id).Limit(1).First(&user).Error; err != nil {
 		return user, err
 	}
 	return user, nil

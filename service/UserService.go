@@ -59,10 +59,10 @@ func LoginService(username string, password string) (int64, error) {
 }
 
 // UserService 用户查询服务
-func UserService(Id int64) (model.UserRegister, error) {
+func UserService(Id int64) (model.User, error) {
 	user, err := model.GetUserById(Id)
 	if err != nil {
-		return model.UserRegister{}, errors.New("用户不存在")
+		return model.User{}, errors.New("用户不存在")
 	}
 	return user, nil
 }
