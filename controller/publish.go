@@ -32,8 +32,9 @@ func Publish(c *gin.Context) {
 	}
 
 	filename := filepath.Base(data.Filename)
-	username := strings.TrimSuffix(token, service.SALT)
-	user, _ := model.GetUserInfoByName(username)
+	userID := strings.TrimSuffix(token, service.SALT)
+	ID, _ := strconv.ParseInt(userID, 10, 64)
+	user, _ := model.GetUserById(ID)
 	finalName := fmt.Sprintf("%d_%s", user.UserID, filename)
 	saveFile := filepath.Join("./public/", finalName)
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
@@ -47,14 +48,14 @@ func Publish(c *gin.Context) {
 	// 创建Video对象并保存到数据库
 	video := model.Video{
 		Author:        user,
-		PlayUrl:       saveFile,   // 这里保存的是视频文件路径
-		CoverUrl:      "",         // 视频封面的URL
-		FavoriteCount: 0,          // 默认点赞数为0
-		CommentCount:  0,          // 默认评论数为0
-		IsFavorite:    false,      // 默认未点赞
-		Title:         title,      // 设置视频标题
-		UserID:        user.Id,    // 外键字段关联到 UserRegister 表的 Id
-		CreatedTime:   time.Now(), // 设置投稿时间为当前时间
+		PlayUrl:       saveFile,    // 这里保存的是视频文件路径
+		CoverUrl:      "",          // 视频封面的URL
+		FavoriteCount: 0,           // 默认点赞数为0
+		CommentCount:  0,           // 默认评论数为0
+		IsFavorite:    false,       // 默认未点赞
+		Title:         title,       // 设置视频标题
+		UserID:        user.UserID, // 外键字段关联到 UserRegister 表的 Id
+		CreatedTime:   time.Now(),  // 设置投稿时间为当前时间
 	}
 
 	if err := dao.DB.Create(&video).Error; err != nil {

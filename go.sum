@@ -1,5 +1,3 @@
-github.com/PaulXu-cn/go-mod-graph-chart v0.5.3 h1:fg9ytRxEA4tdGzkAZxHe8gFiS/ImjQrknPg8l6NPdJ0=
-github.com/PaulXu-cn/go-mod-graph-chart v0.5.3/go.mod h1:PCJo3cS+W3LXrAcdy5N9J/Swfs9cEd6k6xtlqRP3GAI=
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/RaymondCode/simple-demo v0.0.0-20230221080337-89b8c9434e04 h1:wAAJBgu81T41+EKxp43/nqljufNg55rh7QVrxOa2l14=
 github.com/RaymondCode/simple-demo v0.0.0-20230221080337-89b8c9434e04/go.mod h1:XMO1NCRwu+8CnhAGPnCR+YgZPzl1kHER/d69V564Af0=
@@ -73,8 +71,6 @@ github.com/json-iterator/go v1.1.9/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/u
 github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=
 github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
 github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88/go.mod h1:3w7q1U84EfirKl04SVQ/s7nPm1ZPhiXd34z40TNz36k=
-github.com/kisielk/godepgraph v0.0.0-20221115040737-2d0831789458 h1:QHffewzTTAhdV2FQ0X6hxp/tHpRYXE3STwzaD94N1qw=
-github.com/kisielk/godepgraph v0.0.0-20221115040737-2d0831789458/go.mod h1:Gb5YEgxqiSSVrXKWQxDcKoCM94NO5QAwOwTaVmIUAMI=
 github.com/klauspost/compress v1.12.2/go.mod h1:8dP1Hq4DHOhN9w426knH3Rhby4rFm6D8eO+e+Dq5Gzg=
 github.com/klauspost/compress v1.15.0 h1:xqfchp4whNFxn5A4XFyyYtitiWI8Hy5EW59jEwcyL6U=
 github.com/klauspost/compress v1.15.0/go.mod h1:/3/Vjq9QcHkK5uEr5lBEmyoZ1iFhe47etQ6QUkpK6sk=

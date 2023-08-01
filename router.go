@@ -8,8 +8,8 @@ import (
 )
 
 func initRouter(r *gin.Engine) {
-	// public directory is used to serve static resources
-	r.Static("/static", "./public")
+	// public directory is used to serve static resources设置浏览器能通过url访问本地文件
+	r.Static("/public", "./public")
 	r.LoadHTMLGlob("templates/*")
 
 	// home page
