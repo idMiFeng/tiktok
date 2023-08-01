@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/idMiFeng/tiktok/dao"
+	"log"
 	"time"
 )
 
@@ -31,9 +32,10 @@ func GetVideoByUserId(userId int64) ([]Video, error) {
 
 // 根据新投稿时间戳获取视频列表
 func GetVideoByTime(latest_time string) ([]Video, error) {
-	latestTimeObj, _ := time.Parse(time.RFC3339, latest_time)
+	latestTimeObj, _ := time.Parse("2006-01-02T15:04:05", latest_time)
 	var videos []Video
 	err := dao.DB.Order("created_time desc").Where("created_time <= ?", latestTimeObj).Find(&videos).Error
+	log.Println(err)
 	if err != nil {
 		return nil, err
 	}

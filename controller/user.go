@@ -112,15 +112,7 @@ func Login(c *gin.Context) {
 // *********查询用户信息的函数************
 func UserInfo(c *gin.Context) {
 	Id := c.Query("user_id")
-	token := c.Query("token")
 	UserId, _ := strconv.ParseInt(Id, 10, 64)
-	if Usertoken := Id + service.SALT; Usertoken != token {
-		c.JSON(http.StatusOK, gin.H{
-			"status_code": 1,
-			"status_msg":  "token不匹配",
-			"user":        nil,
-		})
-	}
 	user, err := service.UserService(UserId)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
