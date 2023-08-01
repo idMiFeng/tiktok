@@ -6,6 +6,7 @@ import (
 	"github.com/idMiFeng/tiktok/model"
 	"github.com/idMiFeng/tiktok/service"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -63,9 +64,10 @@ func VerifyTokenQuery(c *gin.Context) {
 
 // 解析token，判断用户是否登录
 func ParseToken(token string) (bool, error) {
-	username := strings.TrimSuffix(token, service.SALT)
+	id := strings.TrimSuffix(token, service.SALT)
 	//根据token解析出来的用户名查表，找到则说明用户已登录
-	_, err := model.GetUserByName(username)
+	Id, _ := strconv.ParseInt(id, 10, 64)
+	_, err := model.GetUserById(Id)
 	if err != nil {
 		return false, errors.New("用户不存在")
 	}

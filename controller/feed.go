@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/idMiFeng/tiktok/model"
+	"log"
 	"net/http"
 	"time"
 )
@@ -16,6 +17,7 @@ type FeedResponse struct {
 // Feed same demo video list for every request
 func Feed(c *gin.Context) {
 	latest_time := c.Query("latest_time")
+	log.Println(latest_time)
 	Videos, _ := model.GetVideoByTime(latest_time)
 	var nextTime int64
 	if len(Videos) > 0 {
