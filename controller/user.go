@@ -1,9 +1,12 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/idMiFeng/tiktok/dao"
+	"github.com/idMiFeng/tiktok/service"
 	"net/http"
-	"sync/atomic"
+	"strconv"
 )
 
 // usersLoginInfo use map to store user info, and key is username+password for demo
@@ -19,74 +22,118 @@ var usersLoginInfo = map[string]User{
 	},
 }
 
-var userIdSequence = int64(1)
-
-type UserLoginResponse struct {
-	Response
-	UserId int64  `json:"user_id,omitempty"`
-	Token  string `json:"token"`
-}
-
-type UserResponse struct {
-	Response
-	User User `json:"user"`
-}
-
+// *********处理注册的函数************
 func Register(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
 
-	token := username + password
-
-	if _, exist := usersLoginInfo[token]; exist {
-		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: Response{StatusCode: 1, StatusMsg: "User already exist"},
+	// 判断是否为空
+	if username == "" || password == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": 1,
+			"status_msg":  "账号或密码为空",
+			"user_id":     0,
+			"token":       "",
 		})
+		return
+	}
+	// 校验参数长度
+	if len(password) > 32 || len(username) > 32 {
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": 1,
+			"status_msg":  "长度应小于32位",
+			"user_id":     0,
+			"token":       "",
+		})
+		return
+	}
+	password = service.Encryption(password)
+
+	//调用service层注册服务
+	Id, err := service.RegisterService(username, password)
+
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": 1,
+			"status_msg":  "注册失败",
+			"user_id":     0,
+			"token":       "",
+		})
+		return
 	} else {
-		atomic.AddInt64(&userIdSequence, 1)
-		newUser := User{
-			Id:   userIdSequence,
-			Name: username,
-		}
-		usersLoginInfo[token] = newUser
-		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: Response{StatusCode: 0},
-			UserId:   userIdSequence,
-			Token:    username + password,
+		//注册token
+		token := service.GetTokenName(Id)
+
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": 0,
+			"status_msg":  "注册成功",
+			"user_id":     Id,
+			"token":       token,
 		})
 	}
 }
 
+// *********处理登录的函数************
 func Login(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
-
-	token := username + password
-
-	if user, exist := usersLoginInfo[token]; exist {
-		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: Response{StatusCode: 0},
-			UserId:   user.Id,
-			Token:    token,
+	//判断是否为空
+	if username == "" || password == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": 1,
+			"status_msg":  "账号或密码为空",
+			"user_id":     0,
+			"token":       "",
+		})
+		return
+	}
+	password = service.Encryption(password)
+	fmt.Println(username, password)
+	Id, err := service.LoginService(username, password)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": 1,
+			"status_msg":  "登录失败",
+			"user_id":     0,
+			"token":       "",
 		})
 	} else {
-		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
+		// 颁发token
+		token := service.GetTokenName(Id)
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": 0,
+			"status_msg":  "登录成功",
+			"user_id":     Id,
+			"token":       token,
 		})
 	}
+
 }
 
+// *********查询用户信息的函数************
 func UserInfo(c *gin.Context) {
-	token := c.Query("token")
-
-	if user, exist := usersLoginInfo[token]; exist {
-		c.JSON(http.StatusOK, UserResponse{
-			Response: Response{StatusCode: 0},
-			User:     user,
+	Id := c.Query("user_id")
+	UserId, _ := strconv.ParseInt(Id, 10, 64)
+	user, err := service.UserService(UserId)
+	var total_favorited int64
+	var work_count int64
+	//查询点赞数量和作品数量并更新
+	_ = dao.DB.Model(&Video{}).Where("is_favorite = ? AND user_id = ?", true, UserId).Count(&total_favorited).Error
+	_ = dao.DB.Model(&Video{}).Where("user_id = ?", UserId).Count(&work_count).Error
+	user.Total_favorited = total_favorited
+	user.Work_count = work_count
+	_ = dao.DB.Save(&user).Error
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": 1,
+			"status_msg":  "Id不匹配",
+			"user":        nil,
 		})
 	} else {
-		c.JSON(http.StatusOK, UserResponse{
-			Response: Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": 0,
+			"status_msg":  "查询成功",
+			"user":        user,
 		})
 	}
 }

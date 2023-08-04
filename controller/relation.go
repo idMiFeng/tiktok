@@ -2,51 +2,106 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/idMiFeng/tiktok/dao"
+	"github.com/idMiFeng/tiktok/model"
+	"github.com/idMiFeng/tiktok/service"
 	"net/http"
+	"strconv"
+	"strings"
 )
-
-type UserListResponse struct {
-	Response
-	UserList []User `json:"user_list"`
-}
 
 // RelationAction no practical effect, just check if token is valid
 func RelationAction(c *gin.Context) {
 	token := c.Query("token")
+	id := strings.TrimSuffix(token, service.SALT)
+	user_id, _ := strconv.ParseInt(id, 10, 64)
+	to_user_ID := c.Query("to_user_id")
+	to_user_id, _ := strconv.ParseInt(to_user_ID, 10, 64)
+	action_type := c.Query("action_type")
+	switch action_type {
+	case "1":
+		//更新用户关系表
+		Follow := model.Follow{
+			UserID:    user_id,
+			To_userId: to_user_id,
+		}
+		dao.DB.Create(&Follow)
+		//用户自己关注总数加一,对方用户粉丝数加一
+		user, _ := model.GetUserById(user_id)
+		user.FollowCount++
+		dao.DB.Save(&user)
+		to_user, _ := model.GetUserById(to_user_id)
+		to_user.FollowerCount++
+		to_user.IsFollow = true
+		dao.DB.Save(&to_user)
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": 0,
+			"status_msg":  "",
+		})
+		return
+	case "2":
+		Follow := model.Follow{
+			UserID:    user_id,
+			To_userId: to_user_id,
+		}
+		dao.DB.Where(&Follow).Delete(&Follow)
+		user, _ := model.GetUserById(user_id)
+		user.FollowCount--
+		dao.DB.Save(&user)
+		to_user, _ := model.GetUserById(to_user_id)
+		to_user.FollowerCount--
+		to_user.IsFollow = false
+		dao.DB.Save(&to_user)
+		c.JSON(http.StatusOK, gin.H{
+			"status_code": 0,
+			"status_msg":  "",
+		})
+		return
 
-	if _, exist := usersLoginInfo[token]; exist {
-		c.JSON(http.StatusOK, Response{StatusCode: 0})
-	} else {
-		c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
 	}
 }
 
 // FollowList all users have same follow list
 func FollowList(c *gin.Context) {
-	c.JSON(http.StatusOK, UserListResponse{
-		Response: Response{
-			StatusCode: 0,
-		},
-		UserList: []User{DemoUser},
+	userId := c.Query("user_id")
+	user_id, _ := strconv.ParseInt(userId, 10, 64)
+	//GetTuidsByUid函数得到关注的人的id
+	toUserIDs, _ := model.GetTuidsByUid(user_id)
+	var users []model.User
+	_ = dao.DB.Where("id IN (?)", toUserIDs).Find(&users)
+	c.JSON(http.StatusOK, gin.H{
+		"status_code": 0,
+		"user_list":   users,
 	})
+	return
 }
 
 // FollowerList all users have same follower list
+// 通过查Follow表实现
 func FollowerList(c *gin.Context) {
-	c.JSON(http.StatusOK, UserListResponse{
-		Response: Response{
-			StatusCode: 0,
-		},
-		UserList: []User{DemoUser},
+	userId := c.Query("user_id")
+	user_id, _ := strconv.ParseInt(userId, 10, 64)
+	//用GetUidsByTuid函数得到粉丝的id
+	toUserIDs, _ := model.GetUidsByTuid(user_id)
+	var users []model.User
+	_ = dao.DB.Where("id IN (?)", toUserIDs).Find(&users)
+	c.JSON(http.StatusOK, gin.H{
+		"status_code": 0,
+		"user_list":   users,
 	})
+	return
 }
 
 // FriendList all users have same friend list
 func FriendList(c *gin.Context) {
-	c.JSON(http.StatusOK, UserListResponse{
-		Response: Response{
-			StatusCode: 0,
-		},
-		UserList: []User{DemoUser},
+	id := c.Query("user_id")
+	user_id, _ := strconv.ParseInt(id, 10, 64)
+	user, _ := model.GetUserById(user_id)
+	var users []model.User
+	users = append(users, user)
+	c.JSON(http.StatusOK, gin.H{
+		"status_code": 0,
+		"status_msg":  "",
+		"user_list":   users,
 	})
 }
