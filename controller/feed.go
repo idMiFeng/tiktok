@@ -7,12 +7,6 @@ import (
 	"time"
 )
 
-type FeedResponse struct {
-	Response
-	VideoList []Video `json:"video_list,omitempty"`
-	NextTime  int64   `json:"next_time,omitempty"`
-}
-
 // Feed same demo video list for every request
 func Feed(c *gin.Context) {
 	latest_time := c.Query("latest_time")
@@ -27,6 +21,9 @@ func Feed(c *gin.Context) {
 	serverURL := "http://192.168.200.108:8080/"
 	for i := range Videos {
 		Videos[i].PlayUrl = serverURL + Videos[i].PlayUrl
+		Videos[i].CoverUrl = serverURL + Videos[i].CoverUrl
+		anthor, _ := model.GetUserById(Videos[i].UserID)
+		Videos[i].Author = anthor
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status_code": 0,

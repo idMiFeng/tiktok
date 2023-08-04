@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/idMiFeng/tiktok/dao"
 	"github.com/idMiFeng/tiktok/model"
@@ -8,7 +9,12 @@ import (
 )
 
 func main() {
-	//连接数据库
+	// 初始化Redis客户端连接
+	if err := dao.InitRedisClient(); err != nil {
+		fmt.Println("Failed to connect to Redis:", err)
+		return
+	}
+	//连接mysql数据库
 	err := dao.InitMySQL()
 	if err != nil {
 		panic(err)
@@ -16,7 +22,7 @@ func main() {
 	defer dao.Close()
 
 	//建表
-	dao.DB.AutoMigrate(&model.UserRegister{}, &model.User{}, &model.Video{})
+	dao.DB.AutoMigrate(&model.UserRegister{}, &model.User{}, &model.Video{}, &model.Comment{}, &model.Follow{}, &model.Message{})
 
 	go service.RunMessageServer()
 

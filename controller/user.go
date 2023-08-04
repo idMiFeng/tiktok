@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/idMiFeng/tiktok/dao"
 	"github.com/idMiFeng/tiktok/service"
 	"net/http"
 	"strconv"
@@ -114,6 +115,14 @@ func UserInfo(c *gin.Context) {
 	Id := c.Query("user_id")
 	UserId, _ := strconv.ParseInt(Id, 10, 64)
 	user, err := service.UserService(UserId)
+	var total_favorited int64
+	var work_count int64
+	//查询点赞数量和作品数量并更新
+	_ = dao.DB.Model(&Video{}).Where("is_favorite = ? AND user_id = ?", true, UserId).Count(&total_favorited).Error
+	_ = dao.DB.Model(&Video{}).Where("user_id = ?", UserId).Count(&work_count).Error
+	user.Total_favorited = total_favorited
+	user.Work_count = work_count
+	_ = dao.DB.Save(&user).Error
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status_code": 1,
