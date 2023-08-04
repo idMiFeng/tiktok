@@ -1,4 +1,4 @@
-# simple-demo
+# tiktok
 
 ## 抖音项目服务端简单示例
 
@@ -7,12 +7,12 @@
 工程无其他依赖，直接编译运行即可
 
 ```shell
-go build && ./simple-demo
+go build && ./tiktok
 ```
 
 ### 功能说明
 
-接口功能不完善，仅作为示例
+
 
 * 用户登录数据保存在内存中，单次运行过程中有效
 * 视频上传后会保存到本地 public 目录中，访问时用 127.0.0.1:8080/static/video_name 即可
