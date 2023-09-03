@@ -31,6 +31,7 @@ func FavoriteAction(c *gin.Context) {
 		user, _ := model.GetUserById(video.UserID)
 		user.Total_favorited++
 		dao.DB.Save(&user)
+		dao.DB.Model(&model.Video{}).Where("id = ?", id).Update(video)
 	} else {
 		video.IsFavorite = false
 		if video.FavoriteCount > 0 {
