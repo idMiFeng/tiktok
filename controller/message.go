@@ -29,11 +29,13 @@ func MessageAction(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status_code": 1,
+			"status_msg":  "false",
 		})
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
 			"status_code": 0,
+			"status_msg":  "success",
 		})
 		return
 	}
