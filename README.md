@@ -9,6 +9,7 @@ https://qjxdqi8snh.feishu.cn/docx/KjOjdmeLho3ZQUxgrhVchB86n8c?from=from_copylink
 工程无其他依赖，直接编译运行即可，服务器与数据库配置信息自行修改
 
 ```shell
+go mod tidy
 go build && ./tiktok
 ```
 ### 项目结构图
