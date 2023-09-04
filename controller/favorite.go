@@ -31,6 +31,8 @@ func FavoriteAction(c *gin.Context) {
 		user, _ := model.GetUserById(video.UserID)
 		user.Total_favorited++
 		dao.DB.Save(&user)
+		dao.DB.Model(&model.Video{}).Where("id = ?", id).Update(video)
+
 	} else {
 		video.IsFavorite = false
 		if video.FavoriteCount > 0 {
@@ -57,10 +59,10 @@ func FavoriteAction(c *gin.Context) {
 
 // FavoriteList all users have same favorite video list
 func FavoriteList(c *gin.Context) {
-	id := c.Query("user_id")
-	user_id, _ := strconv.ParseInt(id, 10, 64)
+	//id := c.Query("user_id")
+	//user_id, _ := strconv.ParseInt(id, 10, 64)
 	var videos []Video
-	dao.DB.Where("user_id = ? AND is_favorite = ?", user_id, true).Find(&videos)
+	dao.DB.Where("is_favorite = ?", true).Find(&videos)
 	serverURL := "http://192.168.200.108:8080/"
 	for i := range videos {
 		videos[i].CoverUrl = serverURL + videos[i].CoverUrl

@@ -77,7 +77,6 @@ func FollowList(c *gin.Context) {
 }
 
 // FollowerList all users have same follower list
-// 通过查Follow表实现
 func FollowerList(c *gin.Context) {
 	userId := c.Query("user_id")
 	user_id, _ := strconv.ParseInt(userId, 10, 64)
@@ -94,6 +93,59 @@ func FollowerList(c *gin.Context) {
 
 // FriendList all users have same friend list
 func FriendList(c *gin.Context) {
+	/* id := c.Query("user_id")
+	   user_id, _ := strconv.ParseInt(id, 10, 64)
+
+	   // 查询该用户关注的用户列表
+	   var followingUsers []model.Follow
+	   if err := dao.DB.Where("user_id = ?", user_id).Find(&followingUsers).Error; err != nil {
+	       c.JSON(http.StatusOK, gin.H{
+	           "status_code": 1,
+	           "status_msg":  err.Error(),
+	           "user_list":   nil,
+	       })
+	       return
+	   }
+
+	   // 查询关注该用户的用户列表
+	   var followers []model.Follow
+	   if err := dao.DB.Where("to_user_id = ?", user_id).Find(&followers).Error; err != nil {
+	       c.JSON(http.StatusOK, gin.H{
+	           "status_code": 1,
+	           "status_msg":  err.Error(),
+	           "user_list":   nil,
+	       })
+	       return
+	   }
+
+	   // 找出互相关注的用户
+	   var friends []model.User
+	   for _, followingUser := range followingUsers {
+	       for _, follower := range followers {
+	           if followingUser.ToUserID == follower.UserID {
+	               // 双方互相关注，将该用户加入好友列表
+	               friend, err := model.GetUserById(followingUser.ToUserID)
+	               if err != nil {
+	                   c.JSON(http.StatusOK, gin.H{
+	                       "status_code": 1,
+	                       "status_msg":  err.Error(),
+	                       "user_list":   nil,
+	                   })
+	                   return
+	               }
+	               friends = append(friends, friend)
+	               break
+	           }
+	       }
+	   }
+
+	   c.JSON(http.StatusOK, gin.H{
+	       "status_code": 0,
+	       "status_msg":  "",
+	       "user_list":   friends,
+	   })
+	*/
+	//为了测试方便设置为返回本用户
 	id := c.Query("user_id")
 	user_id, _ := strconv.ParseInt(id, 10, 64)
 	user, _ := model.GetUserById(user_id)

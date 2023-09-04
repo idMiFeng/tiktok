@@ -32,6 +32,8 @@ func Publish(c *gin.Context) {
 	userID := strings.TrimSuffix(token, service.SALT)
 	ID, _ := strconv.ParseInt(userID, 10, 64)
 	user, _ := model.GetUserById(ID)
+	user.Work_count++
+	dao.DB.Save(&user)
 	finalName := fmt.Sprintf("%d_%s", user.UserID, filename)
 	saveFile := filepath.Join("./public/", finalName)
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {

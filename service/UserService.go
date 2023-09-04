@@ -13,7 +13,7 @@ import (
 const SALT = "BYTEDANCE"
 
 // GetTokenName 根据用户Id生成token
-func GetTokenName(Id int64) string {
+func GetTokenId(Id int64) string {
 	token := strconv.FormatInt(Id, 10) + SALT
 	return token
 }

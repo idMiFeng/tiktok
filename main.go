@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+
 	// 初始化Redis客户端连接
 	if err := dao.InitRedisClient(); err != nil {
 		fmt.Println("Failed to connect to Redis:", err)
@@ -32,4 +33,5 @@ func main() {
 	initRouter(r)
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+
 }

@@ -62,7 +62,7 @@ func Register(c *gin.Context) {
 		return
 	} else {
 		//注册token
-		token := service.GetTokenName(Id)
+		token := service.GetTokenId(Id)
 
 		c.JSON(http.StatusOK, gin.H{
 			"status_code": 0,
@@ -99,7 +99,7 @@ func Login(c *gin.Context) {
 		})
 	} else {
 		// 颁发token
-		token := service.GetTokenName(Id)
+		token := service.GetTokenId(Id)
 		c.JSON(http.StatusOK, gin.H{
 			"status_code": 0,
 			"status_msg":  "登录成功",

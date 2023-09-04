@@ -4,3 +4,7 @@
 .1024feature*
 .nfs*
 node_modules
+*.exe
+go.sum
+README.md
+项目需求.md

@@ -2,9 +2,9 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/idMiFeng/tiktok/dao"
 	"github.com/idMiFeng/tiktok/model"
 	"github.com/idMiFeng/tiktok/service"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -23,7 +23,10 @@ func CommentAction(c *gin.Context) {
 		videoId := c.Query("video_id")
 		video_id, _ := strconv.ParseInt(videoId, 10, 64)
 		comment, _ := model.InsertComment(user_id, video_id, comment_text)
-		log.Println(comment)
+		video := model.Video{}
+		dao.DB.Model(&model.Video{}).Where("id = ?", video_id).First(&video)
+		video.CommentCount++
+		dao.DB.Save(&video)
 		c.JSON(http.StatusOK, gin.H{
 			"status_code": 0,
 			"status_msg":  "",
