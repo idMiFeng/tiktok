@@ -61,7 +61,7 @@ func FavoriteAction(c *gin.Context) {
 func FavoriteList(c *gin.Context) {
 	//id := c.Query("user_id")
 	//user_id, _ := strconv.ParseInt(id, 10, 64)
-	var videos []Video
+	var videos []model.Video
 	dao.DB.Where("is_favorite = ?", true).Find(&videos)
 	serverURL := "http://192.168.200.108:8080/"
 	for i := range videos {

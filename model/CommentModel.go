@@ -39,6 +39,11 @@ func InsertComment(userId int64, videoId int64, content string) (Comment, error)
 // 删除评论
 func CancelComment(comment_id int64) error {
 	comment := Comment{ID: comment_id}
+	video_id := comment.VideoId
+	video := Video{}
+	dao.DB.Model(&Video{}).Where("id = ?", video_id).First(&video)
+	video.CommentCount--
+	dao.DB.Save(video)
 	result := dao.DB.Delete(&comment)
 	if result.Error != nil {
 		return result.Error
