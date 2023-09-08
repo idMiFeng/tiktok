@@ -94,7 +94,7 @@ func FollowerList(c *gin.Context) {
 
 // FriendList all users have same friend list
 func FriendList(c *gin.Context) {
-	/* id := c.Query("user_id")
+	 id := c.Query("user_id")
 	   user_id, _ := strconv.ParseInt(id, 10, 64)
 
 	   // 查询该用户关注的用户列表
@@ -145,16 +145,16 @@ func FriendList(c *gin.Context) {
 	       "status_msg":  "",
 	       "user_list":   friends,
 	   })
-	*/
-	//为了测试方便设置为返回本用户
-	id := c.Query("user_id")
-	user_id, _ := strconv.ParseInt(id, 10, 64)
-	user, _ := model.GetUserById(user_id)
-	var users []model.User
-	users = append(users, user)
-	c.JSON(http.StatusOK, gin.H{
-		"status_code": 0,
-		"status_msg":  "",
-		"user_list":   users,
-	})
+	
+	// //为了测试方便设置为返回本用户
+	// id := c.Query("user_id")
+	// user_id, _ := strconv.ParseInt(id, 10, 64)
+	// user, _ := model.GetUserById(user_id)
+	// var users []model.User
+	// users = append(users, user)
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"status_code": 0,
+	// 	"status_msg":  "",
+	// 	"user_list":   users,
+	// })
 }
