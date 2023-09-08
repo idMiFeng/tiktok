@@ -123,9 +123,9 @@ func FriendList(c *gin.Context) {
 	   var friends []model.User
 	   for _, followingUser := range followingUsers {
 	       for _, follower := range followers {
-	           if followingUser.ToUserID == follower.UserID {
+	           if followingUser.To_userId == follower.UserID {
 	               // 双方互相关注，将该用户加入好友列表
-	               friend, err := model.GetUserById(followingUser.ToUserID)
+	               friend, err := model.GetUserById(followingUser.To_userId)
 	               if err != nil {
 	                   c.JSON(http.StatusOK, gin.H{
 	                       "status_code": 1,
